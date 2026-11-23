@@ -28,34 +28,5 @@ node main.ts [--format=NAME] [--check] [--strict] [PATCH]
   standard input.
 - `--format=NAME` reads one format: `unified`, `search-replace`, `v4a` or
   `json`; `auto` (the default) detects it.
-- `--check` does everything but write: the same output and exit code, and no
-  file is created, changed or deleted.
-- `--strict` matches lines exactly (tier 0 only).
-
-Exit 0 lists the changed files (`A`/`D`/`M`, `R old -> new` for a move) and
-`ok: <n> files`. Exit 1 lists one `error: <code> <path>` line per failed edit
-(`no-match`, `ambiguous`, `missing`, `exists`, `unsafe`) and
-`failed: <k> of <n> edits`; when any edit fails, no file is written. Exit 2
-writes exactly one line: `error: usage`, `error: no-patch`, `error: format`
-or `error: parse <N>`.
-
-Matching runs at three tiers — exact, trailing whitespace off, both ends off —
-and takes the first tier at which the old lines occur; a unified hunk takes
-the occurrence nearest its (possibly wrong) line number, a SEARCH/REPLACE
-block needs exactly one occurrence, and a V4A chunk takes the first at or
-after its cursor (or its anchor). At tier 2, added lines are re-indented from
-the patch's indent to the file's. A file keeps its own line break (CRLF or LF)
-and its final line break, unless a unified hunk's `\ No newline at end of
-file` says otherwise.
-
-## Checks
-
-- Practice set (100 checks, kit's `check.ts`): **100/100, practice score 1000**.
-- 134 extra hand-written edge cases for SPEC sentences the practice set does
-  not show (usage errors, no-EOL handling, empty hunks, moves, atomicity,
-  `--check`, `--strict`, V4A cursor/anchor/EOF rules, JSON faults, unsafe
-  paths): **134/134**.
-- Deterministic: repeated runs give identical exit codes, stdout and files.
-
-`runner.ts` is the kit's runner, kept as it is: in a trial it reads the checks
-from the env and runs `main.ts` on each one.
+- `--check` reports what would change without writing anything.
+- `--strict` matches lines exactly, with no whitespace tolerance.
